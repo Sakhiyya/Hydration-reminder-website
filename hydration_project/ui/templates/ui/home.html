@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  body {
+    background: linear-gradient(to right, #0a2239, #1e3a5f);
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #eee;
+  }
+
+  .split-container {
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 1rem;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+    margin: 2rem auto;
+    max-width: 1200px;
+    background-color: #121a2a;
+    overflow: hidden;
+  }
+
+  .left-panel {
+    background: linear-gradient(135deg, #0d1f3c, #1a3153);
+    color: #e0e7ff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    flex: 1 1 300px;
+    padding: 2rem;
+  }
+
+  .left-panel::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background-color: rgba(10, 25, 50, 0.7);
+    z-index: 0;
+    border-radius: 1rem;
+  }
+
+  .left-panel h2,
+  .tip-box,
+  .left-panel img {
+    position: relative;
+    z-index: 1;
+  }
+
+  .left-panel h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-shadow: 1px 1px 4px #000a33;
+  }
+
+  .tip-box {
+    background: rgba(20, 40, 70, 0.6);
+    padding: 1rem;
+    border-radius: 1rem;
+    font-size: 1rem;
+    box-shadow: 0 0 8px rgba(10, 20, 40, 0.9);
+    margin-top: 1rem;
+  }
+
+  .left-panel img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .right-panel {
+    background-color: #1f2f4a;
+    flex: 1 1 300px;
+    min-width: 300px;
+    padding: 2rem;
+    color: #dde6f3;
+  }
+
+  .form-heading {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: #a3c1ff;
+    text-align: center;
+    text-shadow: 0 0 6px #496dbb;
+  }
+
+  .form-label {
+    font-weight: 500;
+    color: #c3d1f5;
+  }
+
+  input.form-control,
+  select.form-select {
+    background-color: #324763;
+    border: 1px solid #5577aa;
+    color: #e3eafc;
+  }
+
+  input.form-control::placeholder {
+    color: #a3b2d1;
+  }
+
+  input.form-control:focus,
+  select.form-select:focus {
+    background-color: #425a7e;
+    border-color: #88aaff;
+    color: #fff;
+    outline: none;
+  }
+
+  .btn-info {
+    width: 100%;
+    font-size: 1.2rem;
+    background-color: #2a5491;
+    border: none;
+    color: #d1defc;
+    box-shadow: 0 4px 10px #1a3170;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+
+  .btn-info:hover {
+    background-color: #1a3170;
+    transform: scale(1.05);
+  }
+
+  .alert {
+    margin-bottom: 1rem;
+    background-color: #4a5a7a;
+    color: #dbe1f0;
+    border: none;
+    box-shadow: 0 0 5px #223366;
+  }
+
+  @keyframes fadeInScale {
+    0% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .prediction-result {
+    background-color: #293a5a;
+    border: 2px solid #4c7fff;
+    border-radius: 0.8rem;
+    padding: 1rem 1.5rem;
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #bde0ff;
+    text-shadow: 1px 1px 2px #000a33;
+    box-shadow: 0 0 10px rgba(100, 150, 255, 0.5);
+  }
+
+  .animate-result {
+    animation: fadeInScale 1s ease-out forwards;
+  }
+</style>
+
+<div class="split-container">
+  <!-- Left Panel -->
+  <div class="left-panel">
+    <img src="{% static 'ui/download (3).jpeg' %}" alt="Stay hydrated" />
+  </div>
+
+  <!-- Right Panel -->
+  <div class="right-panel">
+    <div class="form-heading">Enter Your Info to Predict Daily Water Intake</div>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-warning" role="alert">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% if result %}
+      <div class="prediction-result animate-result animate-bounce-in">
+        💧 <strong>{{ result }}</strong>
+      </div>
+    {% endif %}
+
+    <form method="post" class="needs-validation" novalidate>
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label for="temperature" class="form-label">🌡️ Temperature (°C)</label>
+        <input type="number" class="form-control" name="temperature" step="0.1" required placeholder="e.g., 28.5">
+      </div>
+
+      <div class="mb-3">
+        <label for="activity" class="form-label">🏃‍♀️ Activity Level</label>
+        <select name="activity" class="form-select" required>
+          <option value="">Choose...</option>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="sleep" class="form-label">🛏️ Sleep Duration (hrs)</label>
+        <input type="number" class="form-control" name="sleep" step="0.5" required placeholder="e.g., 7.5">
+      </div>
+
+      <div class="mb-3">
+        <label for="weight" class="form-label">⚖️ Weight (kg)</label>
+        <input type="number" class="form-control" name="weight" step="0.1" required placeholder="e.g., 60.2">
+      </div>
+
+      <div class="mb-3">
+        <label for="height" class="form-label">📏 Height (cm)</label>
+        <input type="number" class="form-control" name="height" step="0.1" required placeholder="e.g., 165.0">
+      </div>
+
+      <div class="mb-4">
+        <label for="exercise" class="form-label">🏋️‍♂️ Did you exercise today?</label>
+        <select name="exercise" class="form-select" required>
+          <option value="">Choose...</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-info">💦 Predict</button>
+    </form>
+  </div>
+</div>
+
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock %}
+

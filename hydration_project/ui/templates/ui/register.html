@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  .register-container {
+    max-width: 400px;
+    margin: 3rem auto;
+    background: #405682;
+    padding: 2rem 2.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+    color: #dde6f3;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .register-heading {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: #a3c1ff;
+    text-align: center;
+    text-shadow: 0 0 6px #496dbb;
+  }
+
+  label {
+    font-weight: 500;
+    color: #c3d1f5;
+  }
+
+  input.form-control {
+    background-color: #acc0db;
+    border: 1px solid #5577aa;
+    color: #e3eafc;
+    margin-bottom: 1.25rem;
+  }
+
+  input.form-control::placeholder {
+    color: #afbacf;
+  }
+
+  input.form-control:focus {
+    background-color: #8491a4;
+    border-color: #88aaff;
+    color: #fff;
+    outline: none;
+  }
+
+  .btn-register {
+    width: 100%;
+    font-size: 1.2rem;
+    background-color: #2a5491;
+    border: none;
+    color: #d1defc;
+    box-shadow: 0 4px 10px #1a3170;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+
+  .btn-register:hover {
+    background-color: #1a3170;
+    transform: scale(1.05);
+  }
+
+  .form-text {
+    text-align: center;
+    margin-top: 1rem;
+    color: #6a89c6;
+  }
+
+  .form-text a {
+    color: #88aaff;
+    text-decoration: none;
+  }
+
+  .form-text a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<div class="register-container">
+  <div class="register-heading">📝 Create Your Account</div>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for field in form %}
+      <div class="mb-3">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}
+          <small class="form-text text-muted">{{ field.help_text }}</small>
+        {% endif %}
+        {% for error in field.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-register">Register</button>
+  </form>
+  <div class="form-text">
+    Already have an account? <a href="{% url 'login' %}">Login</a>
+  </div>
+</div>
+
+{% endblock %}

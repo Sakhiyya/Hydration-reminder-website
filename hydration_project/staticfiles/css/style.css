@@ -1,0 +1,38 @@
+body {
+  background: linear-gradient(to bottom, #0d1b2a, #1b263b);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+label, h2, h3 {
+  color: #e0f7fa;
+}
+
+input, select {
+  background-color: #1e3a5f;
+  border: none;
+  color: white;
+}
+
+input:focus, select:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 255, 255, 0.25);
+}
+
+.btn-info {
+  background-color: #00bcd4;
+  border: none;
+}
+
+.btn-info:hover {
+  background-color: #0097a7;
+}
+
+.card {
+  border: 2px solid #007bff;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #00bcd4 !important;
+}
+
